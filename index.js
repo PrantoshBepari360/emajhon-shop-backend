@@ -51,8 +51,19 @@ async function run() {
     });
 
     // ADD ORDERS API
+    app.get('/orders', async (req, res) => {
+      let query = {};
+      const email = req.query.email;
+      if (email){
+        query =  {email: email}
+      }
+      const cursor = await orderCollection.find(query).toArray();
+      res.json(cursor)
+    })
+
     app.post('/orders', async (req, res) => {
       const order = req.body;
+      order.createdAt = new Date();
       const result = await orderCollection.insertOne(order);
       res.json(result);
     })
